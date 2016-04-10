@@ -12,5 +12,5 @@
 	<context:annotation-config />
 	
 	<!-- Scan components -->
-	<context:component-scan base-package="cn.xinjinjie.guide_search" />
+	<context:component-scan base-package="cn.flysnowxf.collection" />
 </beans>
