@@ -14,5 +14,5 @@
         
     <mvc:annotation-driven />
     
-    <context:component-scan base-package="cn.xinjinjie.guide_search.rest" />
+    <context:component-scan base-package="cn.flysnowxf.collection.rest" />
 </beans>
