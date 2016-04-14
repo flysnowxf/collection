@@ -4,6 +4,9 @@
 package cn.flysnowxf.collection.entity;
 
 import java.util.Date;
+import java.util.List;
+
+import cn.flysnowxf.collection.dto.GradeCount;
 
 /**
  * 
@@ -23,6 +26,8 @@ public class Pmg {
 	private String backImage;
 	private Date createDate;
 	private Date modifyDate;
+	
+	private List<GradeCount> gradeCountList;
 	
 	public Integer getId() {
 		return id;
@@ -89,5 +94,11 @@ public class Pmg {
 	}
 	public void setModifyDate(Date modifyDate) {
 		this.modifyDate = modifyDate;
+	}
+	public List<GradeCount> getGradeCountList() {
+		return gradeCountList;
+	}
+	public void setGradeCountList(List<GradeCount> gradeCountList) {
+		this.gradeCountList = gradeCountList;
 	}
 }

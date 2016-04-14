@@ -3,6 +3,8 @@
  */
 package cn.flysnowxf.collection.dto;
 
+import java.util.List;
+
 /**
  * 
  * <br>Create on 2016-4-12 下午9:50:56
@@ -17,7 +19,7 @@ public class PmgRequest extends Query {
 	private static final long serialVersionUID = 1L;
 
 	private String catalog;
-	private String noteId;
+	private List<Integer> noteIds;
 	
 	public String getCatalog() {
 		return catalog;
@@ -25,11 +27,11 @@ public class PmgRequest extends Query {
 	public void setCatalog(String catalog) {
 		this.catalog = catalog;
 	}
-	public String getNoteId() {
-		return noteId;
+	public List<Integer> getNoteIds() {
+		return noteIds;
 	}
-	public void setNoteId(String noteId) {
-		this.noteId = noteId;
+	public void setNoteIds(List<Integer> noteIds) {
+		this.noteIds = noteIds;
 	}
 	
 }

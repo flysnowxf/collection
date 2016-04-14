@@ -27,9 +27,10 @@ public class PmgService {
 	private PmgDao pmgDao;
 	
 	public PageVo<Pmg> query(PmgRequest pmgRequest) {
-		Map<String, Object> param = QueryUtils.getQueryMap(pmgRequest);
-
 		List<Pmg> userList = queryList(pmgRequest);
+		
+		Map<String, Object> param = QueryUtils.getQueryMap(pmgRequest);
+		packageListParam(param, pmgRequest);
 		int count = queryCount(param);
 
 		PageVo<Pmg> pv = new PageVo<Pmg>();
@@ -47,6 +48,7 @@ public class PmgService {
 	
 	public List<Pmg> queryList(PmgRequest pmgRequest) {
 		Map<String, Object> param = QueryUtils.getQueryMap(pmgRequest);
+		packageListParam(param, pmgRequest);
 		List<Pmg> list = pmgDao.query(param);
 
 		return list;
@@ -58,5 +60,9 @@ public class PmgService {
 	
 	public void update(Pmg pmg) {
 		pmgDao.update(pmg);
+	}
+	
+	private void packageListParam(Map<String, Object> param, PmgRequest pmgRequest) {
+		param.put("noteIds", pmgRequest.getNoteIds());
 	}
 }
