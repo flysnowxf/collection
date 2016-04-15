@@ -12,6 +12,13 @@ package cn.flysnowxf.collection.dto;
 public class GradeCount {
 	private String grade;
 	private Integer count;
+	private Integer price;
+	
+	public GradeCount(String grade, Integer count, Integer price) {
+		this.grade = grade;
+		this.count = count;
+		this.price = price;
+	}
 	
 	public GradeCount(String grade, Integer count) {
 		this.grade = grade;
@@ -29,6 +36,14 @@ public class GradeCount {
 	}
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
 	}
 	
 }
