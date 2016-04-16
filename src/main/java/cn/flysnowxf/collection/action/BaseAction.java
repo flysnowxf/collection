@@ -15,5 +15,6 @@ import java.text.SimpleDateFormat;
 public class BaseAction {
 	
 	protected static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	protected static final SimpleDateFormat monthSdf = new SimpleDateFormat("yyyy-MM");
 	protected static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#");
 }

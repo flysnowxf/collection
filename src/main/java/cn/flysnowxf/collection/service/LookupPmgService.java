@@ -57,12 +57,12 @@ public class LookupPmgService {
 				
 				// 打印
 				System.out.println(pmg.getName() + pmg.getCatalog());
+				
+				// 写入grade
+				Integer pmgId = pmg.getId();
 				for (GradeCount gradeCount : data.getGradeCountList()) {
-					Integer pmgId = pmg.getId();
 					String grade = gradeCount.getGrade();
 					Integer count = gradeCount.getCount();
-					
-					System.out.println(grade + "\t" + count);
 					
 					// 写入grade
 					PmgGradeRequest pmgGradeRequest = new PmgGradeRequest();
@@ -85,36 +85,36 @@ public class LookupPmgService {
 						
 						pmgGradeService.update(pmgGrade);
 					}
+				}
+				
+				// 写入log
+				String date = sdf.format(new Date());
+				String logCount = new Gson().toJson(data.getGradeCountList());
+				PmgLogRequest pmgLogRequest = new PmgLogRequest();
+				pmgLogRequest.setPmgId(pmgId);
+				pmgLogRequest.setDate(date);
+				List<PmgLog> logList = pmgLogService.queryList(pmgLogRequest);
+				// 插入
+				if (CollectionUtils.isEmpty(logList)) {
+					PmgLog pmgLog = new PmgLog();
+					pmgLog.setPmgId(pmgId);
+					pmgLog.setDate(date);
+					pmgLog.setCount(logCount);
+					pmgLog.setTotal(total);
 					
-					// 写入log
-					String date = sdf.format(new Date());
-					String logCount = new Gson().toJson(data.getGradeCountList());
-					PmgLogRequest pmgLogRequest = new PmgLogRequest();
-					pmgLogRequest.setPmgId(pmgId);
-					pmgLogRequest.setDate(date);
-					List<PmgLog> logList = pmgLogService.queryList(pmgLogRequest);
-					// 插入
-					if (CollectionUtils.isEmpty(logList)) {
-						PmgLog pmgLog = new PmgLog();
-						pmgLog.setPmgId(pmgId);
-						pmgLog.setDate(date);
-						pmgLog.setCount(logCount);
-						pmgLog.setTotal(total);
-						
-						pmgLogService.add(pmgLog);
-					}
-					// 修改
-					else {
-						PmgLog pmgLog = logList.get(0);
-						pmgLog.setCount(logCount);
-						pmgLog.setTotal(total);
-						
-						pmgLogService.update(pmgLog);
-					}
+					pmgLogService.add(pmgLog);
+				}
+				// 修改
+				else {
+					PmgLog pmgLog = logList.get(0);
+					pmgLog.setCount(logCount);
+					pmgLog.setTotal(total);
+					
+					pmgLogService.update(pmgLog);
 				}
 				
 				// 暂停一下，不要连续抓数据
-//				Thread.sleep(6000);
+//				Thread.sleep(1000);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

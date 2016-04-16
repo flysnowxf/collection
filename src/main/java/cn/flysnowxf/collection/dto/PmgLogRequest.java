@@ -18,6 +18,7 @@ public class PmgLogRequest extends Query {
 
 	private Integer pmgId;
 	private String date;
+	private String month;
 	
 	public Integer getPmgId() {
 		return pmgId;
@@ -30,6 +31,12 @@ public class PmgLogRequest extends Query {
 	}
 	public void setDate(String date) {
 		this.date = date;
+	}
+	public String getMonth() {
+		return month;
+	}
+	public void setMonth(String month) {
+		this.month = month;
 	}
 	
 }

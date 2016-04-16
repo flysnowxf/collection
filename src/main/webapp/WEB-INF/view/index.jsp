@@ -4,10 +4,11 @@
 <title>PMG评级钞数量查询</title>
 <%@ include file="/common/header.jsp" %>
 <style>
-.body {margin-top: 30px}
-.footer {margin-top: 30px; margin-bottom: 30px}
-.name-th {width: 10%}
-.pmg-th {width: 6%}
+.body {margin-top: 30px }
+.body .container {width: 90% }
+.footer {margin-top: 30px; margin-bottom: 30px }
+.name-th {width: 10% }
+.pmg-th {width: 6% }
 .copyright {
     background: #111;
     font-size: 13px;
@@ -52,7 +53,7 @@
 			<c:forEach var="title" items="${titleList }" varStatus="status">
 			<th class="pmg-th">${title }</th>
 			<c:if test="${status.index == 3 || status.index == 4 }">
-			<th class="pmg-th">参考价</th>	
+			<th class="pmg-th">参考价</th>
 			</c:if>
 			</c:forEach>
 		</tr>
@@ -68,8 +69,19 @@
 			<td class="warning">${gradeCount.count }</td>
 			<td class="warning"><c:if test="${gradeCount.price > 0 }">${gradeCount.price } 元</c:if></td>
 			</c:if>
-			<c:if test="${status.index != 3 && status.index != 4 }">
+			<c:if test="${status.index != 3 && status.index != 4 && status.index != 7 }">
 			<td>${gradeCount.count }</td>
+			</c:if>
+			<c:if test="${status.index == 7 }">
+			<td class="danger">${gradeCount.count }</td>
+			</c:if>
+			</c:forEach>
+			<c:forEach var="keyValue" items="${pmg.keyValueList }" varStatus="status">
+			<c:if test="${keyValue.key == '高分难度' }">
+			<td><c:forEach var="i" begin="1" end="${keyValue.value }" step="1"><span class="glyphicon glyphicon-star"></span></c:forEach></td>
+			</c:if>
+			<c:if test="${keyValue.key != '高分难度' }">
+			<td>${keyValue.value }</td>
 			</c:if>
 			</c:forEach>
 		</tr>
@@ -88,6 +100,9 @@
 			<h3>感谢</h3>
 			<p>1.PMG评级钞的数据取自于PMG官网 <code>www.pmgnotes.com</code></p>
 			<p>2.参考价取自于现代钱币网 <code>www.coin001.com</code></p>
+			<h3>友情链接</h3>
+			<a href="http://www.bootcss.com" target="_blank"><code>Bootstrap</code></a>
+			<a href="http://glyphicons.com" target="_blank"><code>Glyphicons</code></a>
 			</div>
 		</div>
 	</div>

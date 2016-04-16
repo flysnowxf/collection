@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -51,18 +52,8 @@ public class PmgUtils {
 		String countryName = code.split(",")[1];
 		
 		String url = MessageFormat.format(URL, countryCode, countryName, catalog);
-		HttpRequest httpRequest = new HttpRequest(url);
-		httpRequest.setConnTimeout(TIMEOUT);
-		httpRequest.setSoTimeout(TIMEOUT);
-		Header[] header = new Header[] {
-				new Header("Cookie", COOKIE)
-		};
-		httpRequest.setHeader(header);
-		HttpResponse httpResponse = HttpUtils.get(httpRequest);
-		
-		logger.info("at=" + sdf.format(new Date()) +
-				"<|>am=lookup" +
-				"<|>url=" + url);
+		HttpResponse httpResponse = callUrl(url);
+			
 		for (Header respHeader : httpResponse.getHeader()) {
 			logger.info(respHeader.getName() + ":" + respHeader.getValue());
 		}
@@ -105,5 +96,31 @@ public class PmgUtils {
 		data.setGradeCountList(gradeCountList);
 		
 		return data;
+	}
+	
+	private static HttpResponse callUrl(String url) {
+		HttpRequest httpRequest = new HttpRequest(url);
+		httpRequest.setConnTimeout(TIMEOUT);
+		httpRequest.setSoTimeout(TIMEOUT);
+		Header[] header = new Header[] {
+				new Header("Cookie", COOKIE)
+		};
+		httpRequest.setHeader(header);
+		HttpResponse httpResponse = HttpUtils.get(httpRequest);
+		boolean result = false;
+		if (httpResponse.getStatus() == HttpStatus.SC_OK) {
+			result = true;
+		}
+		
+		logger.info("at=" + sdf.format(new Date()) +
+				"<|>am=lookup" +
+				"<|>url=" + url +
+				"<|>result=" + result);
+		
+		if (!result) {
+			return callUrl(url);
+		}
+		
+		return httpResponse;
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import cn.flysnowxf.collection.dto.GradeCount;
+import cn.flysnowxf.collection.dto.KeyValueDto;
 
 /**
  * 
@@ -28,6 +29,8 @@ public class Pmg {
 	private Date modifyDate;
 	
 	private List<GradeCount> gradeCountList;
+	private List<KeyValueDto> keyValueList;
+	private Integer highScoreRatio;
 	
 	public Integer getId() {
 		return id;
@@ -100,5 +103,17 @@ public class Pmg {
 	}
 	public void setGradeCountList(List<GradeCount> gradeCountList) {
 		this.gradeCountList = gradeCountList;
+	}
+	public List<KeyValueDto> getKeyValueList() {
+		return keyValueList;
+	}
+	public void setKeyValueList(List<KeyValueDto> keyValueList) {
+		this.keyValueList = keyValueList;
+	}
+	public Integer getHighScoreRatio() {
+		return highScoreRatio;
+	}
+	public void setHighScoreRatio(Integer highScoreRatio) {
+		this.highScoreRatio = highScoreRatio;
 	}
 }

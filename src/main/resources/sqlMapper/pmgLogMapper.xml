@@ -12,6 +12,9 @@
 			<if test="date != null">
 				and date=#{date}
 			</if>
+			<if test="month != null">
+				and substring(date, 1, 7)=#{month}
+			</if>
 		</where>
 	</sql>
 	
