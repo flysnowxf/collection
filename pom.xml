@@ -193,6 +193,14 @@
 				<db_password>flysnowxf</db_password>
 			</properties>
 		</profile>
+		<profile>
+			<id>localhost</id>
+			<properties>
+				<db_jdbcUrl>jdbc:mysql://localhost:3306/collection?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;autoReconnect=true&amp;rewriteBatchedStatements=TRUE</db_jdbcUrl>
+				<db_user>root</db_user>
+				<db_password>flysnowxf</db_password>
+			</properties>
+		</profile>
 	</profiles>
 	
 	<build>

@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.flysnowxf.collection.dto.GradeCount;
@@ -36,9 +38,12 @@ public class LookupPmgService {
 	@Autowired
 	private PmgLogService pmgLogService;
 	
+	private static final Logger logger = Logger.getLogger(LookupPmgService.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public void lookupPmg() {
+		logger.info("LookupPmg Start...");
+		
 		// 获取pmg数据
 		PmgRequest pmgRequest = new PmgRequest();
 		pmgRequest.setPageSize(Integer.MAX_VALUE);
@@ -88,7 +93,7 @@ public class LookupPmgService {
 				}
 				
 				// 写入log
-				String date = sdf.format(new Date());
+				String date = sdf.format(DateUtils.addHours(new Date(), -6));
 				String logCount = new Gson().toJson(data.getGradeCountList());
 				PmgLogRequest pmgLogRequest = new PmgLogRequest();
 				pmgLogRequest.setPmgId(pmgId);
@@ -118,6 +123,8 @@ public class LookupPmgService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
+			logger.info("LookupPmg End!");
 		}
 	}
 }

@@ -26,7 +26,7 @@
 			<ref bean="lookupPmgTask" />
 		</property>
 		<property name="cronExpression">
-			<value>0 0 0 * * ?</value>
+			<value>0 30 0 * * ?</value>
 		</property>
 	</bean>
     

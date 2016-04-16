@@ -121,25 +121,25 @@ public class IndexAction extends BaseAction {
 		
 		// 新增
 		// 本月新增
-		String monthTitle = "本月新增";
-		int monthNew = 0;
-		Date now = new Date();
-		String nowMonth = monthSdf.format(now);
-		PmgLogRequest pmgLogRequest = new PmgLogRequest();
-		pmgLogRequest.setMonth(nowMonth);
-		pmgLogRequest.setPmgId(pmg.getId());
-		pmgLogRequest.setPageSize(Integer.MAX_VALUE);
-		List<PmgLog> logList = pmgLogService.queryList(pmgLogRequest);
-		// 取头尾相减
-		if (CollectionUtils.isNotEmpty(logList) && logList.size() > 1) {
-			PmgLog start = logList.get(0);
-			PmgLog end = logList.get(logList.size() - 1);
-			monthNew = end.getTotal() - start.getTotal();
-		}
-		kvList.add(new KeyValueDto(monthTitle, String.valueOf(monthNew)));
-		if (!DISPLAY_TITLE_LIST.contains(monthTitle)) {
-			DISPLAY_TITLE_LIST.add(monthTitle);
-		}
+//		String monthTitle = "本月新增";
+//		int monthNew = 0;
+//		Date now = new Date();
+//		String nowMonth = monthSdf.format(now);
+//		PmgLogRequest pmgLogRequest = new PmgLogRequest();
+//		pmgLogRequest.setMonth(nowMonth);
+//		pmgLogRequest.setPmgId(pmg.getId());
+//		pmgLogRequest.setPageSize(Integer.MAX_VALUE);
+//		List<PmgLog> logList = pmgLogService.queryList(pmgLogRequest);
+//		// 取头尾相减
+//		if (CollectionUtils.isNotEmpty(logList) && logList.size() > 1) {
+//			PmgLog start = logList.get(0);
+//			PmgLog end = logList.get(logList.size() - 1);
+//			monthNew = end.getTotal() - start.getTotal();
+//		}
+//		kvList.add(new KeyValueDto(monthTitle, String.valueOf(monthNew)));
+//		if (!DISPLAY_TITLE_LIST.contains(monthTitle)) {
+//			DISPLAY_TITLE_LIST.add(monthTitle);
+//		}
 		
 		pmg.setKeyValueList(kvList);
 	}

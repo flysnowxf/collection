@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
-<title>PMG评级钞数量查询</title>
+<title>PMG评级币数量查询</title>
+<meta name="keywords" content="PMG,评级,评级币,评级钞,人民币,纸币,纪念钞,行情,冠号,豹子号,尾8,枣红,背绿,车工,大黑拾" />
+<meta name="description" content="网站提供对新中国第二套人民币、第三套人民币和纪念钞的PMG各评级分数的数量查询和行情报价，以及对冠号的区分归类和真伪鉴别。" />
 <%@ include file="/common/header.jsp" %>
 <style>
 .body {margin-top: 30px }
-.body .container {width: 90% }
+.body .container {width: 95% }
 .footer {margin-top: 30px; margin-bottom: 30px }
 .name-th {width: 10% }
 .pmg-th {width: 6% }
@@ -34,7 +36,7 @@
 <div class="header">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-12 text-center"><h1>PMG评级钞数量查询</h1></div>
+			<div class="col-md-12 text-center"><h1>PMG评级币数量查询</h1></div>
 			<div class="col-md-12 text-center">更新时间：${updateDate }</div>
 		</div>
 	</div>
