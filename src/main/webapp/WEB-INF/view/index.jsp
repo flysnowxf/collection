@@ -36,7 +36,7 @@
 <div class="header">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-12 text-center"><h1>PMG评级币数量查询</h1></div>
+			<div class="col-md-12 text-center"><h1>PMG评级币数量查询 <small>PMG666.com</small></h1></div>
 			<div class="col-md-12 text-center">更新时间：${updateDate }</div>
 		</div>
 	</div>
@@ -100,7 +100,7 @@
 		<div class="row">
 			<div class="bs-callout bs-callout-info" id="callout-type-dl-truncate">
 			<h3>感谢</h3>
-			<p>1.PMG评级钞的数据取自于PMG官网 <code>www.pmgnotes.com</code></p>
+			<p>1.PMG评级币的数据取自于PMG官网 <code>www.pmgnotes.com</code></p>
 			<p>2.参考价取自于现代钱币网 <code>www.coin001.com</code></p>
 			<h3>友情链接</h3>
 			<a href="http://www.bootcss.com" target="_blank"><code>Bootstrap</code></a>
