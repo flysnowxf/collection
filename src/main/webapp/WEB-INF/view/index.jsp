@@ -116,5 +116,7 @@
 		</div>
 	</div>
 </div>
+
+<%@ include file="/common/stat.jsp" %>
 </body>
 </html>
