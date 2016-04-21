@@ -18,6 +18,7 @@ import cn.flysnowxf.collection.dto.PmgData;
 import cn.flysnowxf.collection.dto.PmgGradeRequest;
 import cn.flysnowxf.collection.dto.PmgLogRequest;
 import cn.flysnowxf.collection.dto.PmgRequest;
+import cn.flysnowxf.collection.entity.Note;
 import cn.flysnowxf.collection.entity.Pmg;
 import cn.flysnowxf.collection.entity.PmgGrade;
 import cn.flysnowxf.collection.entity.PmgLog;
@@ -41,6 +42,8 @@ public class LookupPmgService {
 	private PmgLogService pmgLogService;
 	@Autowired
 	private DataService dataService;
+	@Autowired
+	private NoteService noteService;
 	
 	private static final Logger logger = Logger.getLogger(LookupPmgService.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -57,11 +60,14 @@ public class LookupPmgService {
 		PmgUtils.setSession(getSessionId(), getAuth());
 		
 		String date = sdf.format(DateUtils.addHours(new Date(), -6));
-		String country = "中国";
 		boolean isException = false;
-		
 		for (Pmg pmg : list) {
 			try {
+				String country = "中国";
+				Note note = noteService.get(pmg.getNoteId());
+				if (note != null) {
+					country = note.getCountry();
+				}
 				String catalog = pmg.getCatalog();
 				PmgData data = PmgUtils.lookup(country, catalog);
 				

@@ -44,6 +44,8 @@ public class PmgUtils {
 	
 	static {
 		COUNTRY_CODE_MAP.put("中国", "CHN,China");
+		COUNTRY_CODE_MAP.put("澳门", "MAO,Macao");
+		COUNTRY_CODE_MAP.put("香港", "HKG,Hong%20Kong");
 	}
 	
 	public static void setSession(String sessionId, String auth) {

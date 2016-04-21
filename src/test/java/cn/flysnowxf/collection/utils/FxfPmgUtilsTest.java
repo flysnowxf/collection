@@ -27,16 +27,25 @@ public class FxfPmgUtilsTest extends BaseTest {
 		String auth = dataService.getByKeyword("auth").getValue();
 		PmgUtils.setSession(sessionId, auth);
 		
-		String country = "中国";
-		String catalog = "877a";
-		PmgData data = PmgUtils.lookup(country, catalog);
-		// 打印
-		for (GradeCount gradeCount : data.getGradeCountList()) {
-			System.out.println(gradeCount.getGrade() + "\t" + gradeCount.getCount());
-		}
+//		String country = "中国";
+//		String catalog = "877a";
+//		PmgData data = PmgUtils.lookup(country, catalog);
+//		// 打印
+//		for (GradeCount gradeCount : data.getGradeCountList()) {
+//			System.out.println(gradeCount.getGrade() + "\t" + gradeCount.getCount());
+//		}
 		
-		catalog = "877b";
-		data = PmgUtils.lookup(country, catalog);
+//		String country = "澳门";
+//		String catalog = "107a";
+//		PmgData data = PmgUtils.lookup(country, catalog);
+//		// 打印
+//		for (GradeCount gradeCount : data.getGradeCountList()) {
+//			System.out.println(gradeCount.getGrade() + "\t" + gradeCount.getCount());
+//		}
+		
+		String country = "香港";
+		String catalog = "340a";
+		PmgData data = PmgUtils.lookup(country, catalog);
 		// 打印
 		for (GradeCount gradeCount : data.getGradeCountList()) {
 			System.out.println(gradeCount.getGrade() + "\t" + gradeCount.getCount());

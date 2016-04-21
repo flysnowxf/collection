@@ -35,4 +35,8 @@ public class NoteService {
 
 		return list;
 	}
+	
+	public Note get(Integer id) {
+		return noteDao.get(id);
+	}
 }

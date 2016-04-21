@@ -10,6 +10,7 @@
 .body .container {width: 95% }
 .footer {margin-top: 30px; margin-bottom: 30px }
 .name-th {width: 10% }
+.catalog-th {width: 8% }
 .pmg-th {width: 6% }
 .copyright {
     background: #111;
@@ -50,7 +51,7 @@
 		<thead>
 		<tr>
 			<th class="name-th">${pmgItem.key }</th>
-			<th class="pmg-th">编号</th>
+			<th class="catalog-th">编号</th>
 			<th class="pmg-th">总数</th>
 			<c:forEach var="title" items="${titleList }" varStatus="status">
 			<th class="pmg-th">${title }</th>
