@@ -11,6 +11,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.flysnowxf.collection.dto.GradeCount;
 import cn.flysnowxf.collection.dto.PmgData;
@@ -30,6 +31,7 @@ import com.google.gson.Gson;
  *
  * @author fengxuefeng
  */
+@Service
 public class LookupPmgService {
 	@Autowired
 	private PmgGradeService pmgGradeService;
@@ -37,6 +39,8 @@ public class LookupPmgService {
 	private PmgService pmgService;
 	@Autowired
 	private PmgLogService pmgLogService;
+	@Autowired
+	private DataService dataService;
 	
 	private static final Logger logger = Logger.getLogger(LookupPmgService.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -49,7 +53,13 @@ public class LookupPmgService {
 		pmgRequest.setPageSize(Integer.MAX_VALUE);
 		List<Pmg> list = pmgService.queryList(pmgRequest);
 		
+		// 设置最新的session id
+		PmgUtils.setSession(getSessionId(), getAuth());
+		
+		String date = sdf.format(DateUtils.addHours(new Date(), -6));
 		String country = "中国";
+		boolean isException = false;
+		
 		for (Pmg pmg : list) {
 			try {
 				String catalog = pmg.getCatalog();
@@ -93,7 +103,6 @@ public class LookupPmgService {
 				}
 				
 				// 写入log
-				String date = sdf.format(DateUtils.addHours(new Date(), -6));
 				String logCount = new Gson().toJson(data.getGradeCountList());
 				PmgLogRequest pmgLogRequest = new PmgLogRequest();
 				pmgLogRequest.setPmgId(pmgId);
@@ -122,9 +131,25 @@ public class LookupPmgService {
 //				Thread.sleep(1000);
 			} catch (Exception e) {
 				e.printStackTrace();
+				
+				isException = true;
+				break;
 			}
-			
-			logger.info("LookupPmg End!");
 		}
+		
+		// 更新时间
+		if (!isException) {
+			dataService.updateByKeyword("updateDate", date);
+		}
+		
+		logger.info("LookupPmg End!");
+	}
+	
+	private String getSessionId() {
+		return dataService.getByKeyword("sessionId").getValue();
+	}
+	
+	private String getAuth() {
+		return dataService.getByKeyword("auth").getValue();
 	}
 }

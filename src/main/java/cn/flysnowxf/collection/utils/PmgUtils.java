@@ -35,7 +35,9 @@ import cn.flysnowxf.net.HttpUtils;
 public class PmgUtils {
 	private static final Logger logger = Logger.getLogger(PmgUtils.class);
 	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static final String COOKIE = "language=en-US; __cfduid=d9e9b9f2564cb13e5fdeba93d43ac50591458659780; ASP.NET_SessionId=43c3vfozh3zt5sufku4mbwpx; __utma=221905049.1696584910.1458659783.1460282917.1460287836.5; __utmc=221905049; __utmz=221905049.1458659786.1.1.utmcsr=m.pmgnotes.cn|utmccn=(referral)|utmcmd=referral|utmcct=/paper-money-grading/introduction-to-pmg/; _ga=GA1.2.1696584910.1458659783; has-registry=false; .ASPXAUTH=3E1949180999BDE73433DF60E0B2551C5024922BF862C0C4B3FAFCB9F417A0F188ADF68647A7330D16F00543AABEF41EDA03C11DE9F54CE5533B0398FF3DD4A4747C9A2AA3C400C307C23B01A1198064D73ADECC77A404D3E566E957854A9710436B68A50B077E0A240DC7DD7543440AB124E6E9";
+	private static String SESSION_ID = "";
+	private static String AUTH = "";
+	private static final String COOKIE = "language=en-US; __cfduid=d9e9b9f2564cb13e5fdeba93d43ac50591458659780; ASP.NET_SessionId={0}; __utma=221905049.1696584910.1458659783.1460282917.1460287836.5; __utmc=221905049; __utmz=221905049.1458659786.1.1.utmcsr=m.pmgnotes.cn|utmccn=(referral)|utmcmd=referral|utmcct=/paper-money-grading/introduction-to-pmg/; _ga=GA1.2.1696584910.1458659783; has-registry=false; .ASPXAUTH={1}";
 	private static final String URL = "https://www.pmgnotes.com/poplookup/Note.aspx?Country={0}&Name={1}&NoteNumber={0}{2}";
 	private static final Map<String, String> COUNTRY_CODE_MAP = new HashMap<String, String>();
 	private static final Integer TIMEOUT = 20000;
@@ -44,7 +46,16 @@ public class PmgUtils {
 		COUNTRY_CODE_MAP.put("中国", "CHN,China");
 	}
 	
-	public static PmgData lookup(String country, String catalog) {
+	public static void setSession(String sessionId, String auth) {
+		SESSION_ID = sessionId;
+		AUTH = auth;
+	}
+	
+	public static PmgData lookup(String country, String catalog) throws Exception {
+		if (StringUtils.isBlank(SESSION_ID) || StringUtils.isBlank(AUTH)) {
+			throw new Exception();
+		}
+		
 		PmgData data = new PmgData();
 		
 		String code = COUNTRY_CODE_MAP.get(country);
@@ -103,7 +114,7 @@ public class PmgUtils {
 		httpRequest.setConnTimeout(TIMEOUT);
 		httpRequest.setSoTimeout(TIMEOUT);
 		Header[] header = new Header[] {
-				new Header("Cookie", COOKIE)
+				new Header("Cookie", MessageFormat.format(COOKIE, SESSION_ID, AUTH))
 		};
 		httpRequest.setHeader(header);
 		HttpResponse httpResponse = HttpUtils.get(httpRequest);
