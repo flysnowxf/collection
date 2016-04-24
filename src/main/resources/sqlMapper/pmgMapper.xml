@@ -12,6 +12,12 @@
        				'${item}'
        			</foreach>
         	</if>
+        	<if test="noteId != null">
+        		and note_id=#{noteId}
+        	</if>
+        	<if test="catalog != null">
+        		and catalog=#{catalog}
+        	</if>
 		</where>
 	</sql>
 	

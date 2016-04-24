@@ -20,6 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.flysnowxf.collection.dto.BlockDto;
+import cn.flysnowxf.collection.dto.BlockGroupDto;
+import cn.flysnowxf.collection.dto.BlockRequest;
 import cn.flysnowxf.collection.dto.GradeCount;
 import cn.flysnowxf.collection.dto.KeyValueDto;
 import cn.flysnowxf.collection.dto.NoteRequest;
@@ -27,9 +30,11 @@ import cn.flysnowxf.collection.dto.PmgGradeRequest;
 import cn.flysnowxf.collection.dto.PmgRequest;
 import cn.flysnowxf.collection.dto.QueryOrder;
 import cn.flysnowxf.collection.dto.QueryOrderType;
+import cn.flysnowxf.collection.entity.Block;
 import cn.flysnowxf.collection.entity.Note;
 import cn.flysnowxf.collection.entity.Pmg;
 import cn.flysnowxf.collection.entity.PmgGrade;
+import cn.flysnowxf.collection.service.BlockService;
 import cn.flysnowxf.collection.service.DataService;
 import cn.flysnowxf.collection.service.NoteService;
 import cn.flysnowxf.collection.service.PmgGradeService;
@@ -55,6 +60,8 @@ public class IndexAction extends BaseAction {
 	private PmgLogService pmgLogService;
 	@Autowired
 	private DataService dataService;
+	@Autowired
+	private BlockService blockService;
 	
 	private static final int DISPLAY_NUM = 64;
 	private List<String> DISPLAY_TITLE_LIST = new ArrayList<String>();
@@ -205,6 +212,10 @@ public class IndexAction extends BaseAction {
 			int ratio = (int)(highCount * 100.0f / pmg.getTotal());
 			pmg.setHighScoreRatio(ratio);
 			
+			// 冠号
+			packageBlock(pmg);
+			
+			// kv
 			packageKeyValue(pmg);
 		}
 		
@@ -333,5 +344,53 @@ public class IndexAction extends BaseAction {
 		}
 		
 		return star;
+	}
+	
+	private void packageBlock(Pmg pmg) {
+		List<BlockDto> dtoList = new ArrayList<BlockDto>();
+		
+		BlockRequest blockRequest = new BlockRequest();
+		blockRequest.setPmgId(pmg.getId());
+		blockRequest.setPageSize(Integer.MAX_VALUE);
+		List<Block> blockList = blockService.queryList(blockRequest);
+		
+		LinkedHashMap<String, List<BlockGroupDto>> blockMap = new LinkedHashMap<String, List<BlockGroupDto>>();
+		LinkedHashMap<String, String> remarkNumMap = new LinkedHashMap<String, String>();
+		for (Block block : blockList) {
+			String split = getNbsp(3) + " ";
+			
+			String name = block.getName();
+			if (!blockMap.containsKey(name)) {
+				blockMap.put(name, new ArrayList<BlockGroupDto>());
+			}
+			
+			String groupName = "冠号组";
+			if (block.getIsGroup() == 0) {
+				groupName = "冠号";
+			}
+			blockMap.get(name).add(new BlockGroupDto(groupName, block.getValue().replaceAll(",", split)));
+			
+			remarkNumMap.put(name, notNull(block.getRemarkNum()).replaceAll(",", split));
+		}
+		
+		for (Map.Entry<String, List<BlockGroupDto>> entry : blockMap.entrySet()) {
+			BlockDto blockDto = new BlockDto();
+			blockDto.setName(entry.getKey());
+			blockDto.setBlockGroupList(entry.getValue());
+			blockDto.setRemarkNum(remarkNumMap.get(entry.getKey()));
+			dtoList.add(blockDto);
+		}
+		
+		pmg.setBlockList(dtoList);
+	}
+	
+	private String getNbsp(int num) {
+		String text = "";
+		
+		for (int i = 0; i < num; i++) {
+			text += "&nbsp";
+		}
+		
+		return text;
 	}
 }

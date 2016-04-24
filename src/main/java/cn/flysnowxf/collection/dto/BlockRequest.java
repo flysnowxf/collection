@@ -3,7 +3,6 @@
  */
 package cn.flysnowxf.collection.dto;
 
-import java.util.List;
 
 /**
  * 
@@ -11,34 +10,30 @@ import java.util.List;
  *
  * @author fengxuefeng
  */
-public class PmgRequest extends Query {
+public class BlockRequest extends Query {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String catalog;
 	private Integer noteId;
-	private List<Integer> noteIds;
-	
-	public String getCatalog() {
-		return catalog;
-	}
-	public void setCatalog(String catalog) {
-		this.catalog = catalog;
-	}
-	public List<Integer> getNoteIds() {
-		return noteIds;
-	}
-	public void setNoteIds(List<Integer> noteIds) {
-		this.noteIds = noteIds;
-	}
+	private Integer pmgId;
+
 	public Integer getNoteId() {
 		return noteId;
 	}
+
 	public void setNoteId(Integer noteId) {
 		this.noteId = noteId;
+	}
+
+	public Integer getPmgId() {
+		return pmgId;
+	}
+
+	public void setPmgId(Integer pmgId) {
+		this.pmgId = pmgId;
 	}
 	
 }

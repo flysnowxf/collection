@@ -6,6 +6,7 @@ package cn.flysnowxf.collection.entity;
 import java.util.Date;
 import java.util.List;
 
+import cn.flysnowxf.collection.dto.BlockDto;
 import cn.flysnowxf.collection.dto.GradeCount;
 import cn.flysnowxf.collection.dto.KeyValueDto;
 
@@ -23,6 +24,7 @@ public class Pmg {
 	private String circulation;
 	private String catalog;
 	private Integer total;
+	private Integer blockCount;
 	private String frontImage;
 	private String backImage;
 	private Date createDate;
@@ -31,6 +33,7 @@ public class Pmg {
 	private List<GradeCount> gradeCountList;
 	private List<KeyValueDto> keyValueList;
 	private Integer highScoreRatio;
+	private List<BlockDto> blockList;
 	
 	public Integer getId() {
 		return id;
@@ -115,5 +118,17 @@ public class Pmg {
 	}
 	public void setHighScoreRatio(Integer highScoreRatio) {
 		this.highScoreRatio = highScoreRatio;
+	}
+	public Integer getBlockCount() {
+		return blockCount;
+	}
+	public void setBlockCount(Integer blockCount) {
+		this.blockCount = blockCount;
+	}
+	public List<BlockDto> getBlockList() {
+		return blockList;
+	}
+	public void setBlockList(List<BlockDto> blockList) {
+		this.blockList = blockList;
 	}
 }

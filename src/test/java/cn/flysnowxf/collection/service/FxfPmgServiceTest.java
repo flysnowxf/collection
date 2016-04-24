@@ -22,13 +22,31 @@ public class FxfPmgServiceTest extends BaseTest {
 	@Autowired
 	private PmgService pmgService;
 	
-	@Test
+//	@Test
 	public void queryList() {
 		PmgRequest pmgRequest = new PmgRequest();
 		pmgRequest.setPageSize(Integer.MAX_VALUE);
 		List<Pmg> list = pmgService.queryList(pmgRequest);
 		for (Pmg pmg : list) {
 			System.out.println(pmg.getName() + ":" + pmg.getCatalog());
+		}
+	}
+	
+	@Test
+	public void queryListByNoteId() {
+		Integer noteId = 5;
+		String blockNum = "362";
+		List<Pmg> list = pmgService.queryList(noteId, blockNum);
+		for (Pmg pmg : list) {
+			System.out.println(pmg.getName());
+		}
+		
+		String a = "I";
+		String b = "X";
+		String c = "VIII";
+		list = pmgService.queryList(noteId, a, b, c);
+		for (Pmg pmg : list) {
+			System.out.println(pmg.getName());
 		}
 	}
 }
