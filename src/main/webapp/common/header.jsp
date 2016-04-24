@@ -1,5 +1,12 @@
 <meta charset="utf-8">
 
+<% 
+	String path = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath(); 
+	if(request.getServerPort() == 80) {
+		path = request.getScheme() + "://" + request.getServerName() + request.getContextPath();
+	}
+%>
+
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fn" prefix="fn" %>
 

@@ -188,7 +188,7 @@ $(function() {
 		var blockC = $("#blockC").val();
 		
 		$.ajax({
-			url: "http://localhost/collection/utils/queryBlock",
+			url: "<%=path %>/utils/queryBlock",
 			data: {noteId: noteId, blockA: blockA, blockB: blockB, blockC: blockC },
 			success: function(data) {
 				var text = data;
