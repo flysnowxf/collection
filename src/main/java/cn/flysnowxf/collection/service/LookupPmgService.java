@@ -4,10 +4,12 @@
 package cn.flysnowxf.collection.service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +50,23 @@ public class LookupPmgService {
 	private static final Logger logger = Logger.getLogger(LookupPmgService.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
-	public void lookupPmg() {
+	public void lookupPmg(String noteIds) {
 		logger.info("LookupPmg Start...");
+		
+		List<Integer> noteIdList = new ArrayList<Integer>();
+		if (StringUtils.isNotBlank(noteIds)) {
+			String[] ids = noteIds.split(",");
+			for (String id : ids) {
+				noteIdList.add(Integer.valueOf(id));
+			}
+		}
 		
 		// 获取pmg数据
 		PmgRequest pmgRequest = new PmgRequest();
 		pmgRequest.setPageSize(Integer.MAX_VALUE);
+		if (CollectionUtils.isNotEmpty(noteIdList)) {
+			pmgRequest.setNoteIds(noteIdList);
+		}
 		List<Pmg> list = pmgService.queryList(pmgRequest);
 		
 		// 设置最新的session id
@@ -134,7 +147,7 @@ public class LookupPmgService {
 				}
 				
 				// 暂停一下，不要连续抓数据
-//				Thread.sleep(1000);
+//						Thread.sleep(1000);
 			} catch (Exception e) {
 				e.printStackTrace();
 				
@@ -149,6 +162,10 @@ public class LookupPmgService {
 		}
 		
 		logger.info("LookupPmg End!");
+	}
+	
+	public void lookupPmg() {
+		lookupPmg(null);
 	}
 	
 	private String getSessionId() {

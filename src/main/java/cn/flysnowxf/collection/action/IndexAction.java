@@ -77,6 +77,7 @@ public class IndexAction extends BaseAction {
 		
 		List<Integer> noteIds2 = new ArrayList<Integer>();
 		List<Integer> noteIds3 = new ArrayList<Integer>();
+		List<Integer> noteIds4 = new ArrayList<Integer>();
 		List<Integer> noteIdsJn = new ArrayList<Integer>();
 		List<Integer> noteIdsMaoJn = new ArrayList<Integer>();
 		List<Integer> noteIdsHkJn = new ArrayList<Integer>();
@@ -86,6 +87,9 @@ public class IndexAction extends BaseAction {
 			}
 			else if (note.getVersion().equals("第三版")) {
 				noteIds3.add(note.getId());
+			}
+			else if (note.getVersion().equals("第四版")) {
+				noteIds4.add(note.getId());
 			}
 			else if (note.getVersion().equals("纪念钞")) {
 				noteIdsJn.add(note.getId());
@@ -113,6 +117,11 @@ public class IndexAction extends BaseAction {
 		List<Pmg> pmgList2 = pmgService.queryList(pmgRequest);
 		packageData(pmgList2);
 		pmgListMap.put("第二版", pmgList2);
+		
+		pmgRequest.setNoteIds(noteIds4);
+		List<Pmg> pmgList4 = pmgService.queryList(pmgRequest);
+		packageData(pmgList4);
+		pmgListMap.put("第四版", pmgList4);
 		
 		pmgRequest.setNoteIds(noteIdsJn);
 		List<Pmg> pmgListJn = pmgService.queryList(pmgRequest);
@@ -336,7 +345,7 @@ public class IndexAction extends BaseAction {
 		else if (ratio > 10 && ratio <= 30) {
 			star = 4;
 		}
-		else if (ratio > 31 && ratio <= 45) {
+		else if (ratio > 30 && ratio <= 45) {
 			star = 3;
 		}
 		else if (ratio > 45 && ratio <= 60) {
@@ -364,9 +373,9 @@ public class IndexAction extends BaseAction {
 				blockMap.put(name, new ArrayList<BlockGroupDto>());
 			}
 			
-			String groupName = "冠号组";
+			String groupName = "冠字组";
 			if (block.getIsGroup() == 0) {
-				groupName = "冠号";
+				groupName = "冠字";
 			}
 			blockMap.get(name).add(new BlockGroupDto(groupName, block.getValue().replaceAll(",", split)));
 			

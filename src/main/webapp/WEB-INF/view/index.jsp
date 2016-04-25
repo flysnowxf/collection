@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
-<title>PMG评级币数量查询</title>
-<meta name="keywords" content="PMG,评级,评级币,评级钞,人民币,纸币,纪念钞,行情,冠号,豹子号,尾8,枣红,背绿,车工,大黑拾" />
-<meta name="description" content="网站提供对新中国第二套人民币、第三套人民币和纪念钞的PMG各评级分数的数量查询和行情报价，以及对冠号的区分归类和真伪鉴别。" />
+<title>PMG评级币数量查询-枣红、背绿、车工和碳黑等各版评级分数统计</title>
+<meta name="keywords" content="PMG,评级,评级币,评级钞,人民币,纸币,纪念钞,行情,冠号,豹子号,尾8,枣红,背绿,车工,绿3,大黑拾,数量查询" />
+<meta name="description" content="网站提供对新中国第二套人民币、第三套人民币、第四套人民币和纪念钞的PMG各评级分数的数量查询、统计报告和行情报价，以及对冠号的区分归类和真伪鉴别。PMG评级纸币数量查询，就在PMG666.com。" />
 <%@ include file="/common/header.jsp" %>
 <style>
 .body {margin-top: 30px }

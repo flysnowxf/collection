@@ -38,8 +38,8 @@ public class UtilsAction extends BaseAction {
 	private BlockService blockService;
 	
 	@RequestMapping("/lookupPmg")
-	public String lookupPmg() {
-		lookupPmgService.lookupPmg();
+	public String lookupPmg(String noteIds) {
+		lookupPmgService.lookupPmg(noteIds);
 		
 		return "lookupPmg";
 	}
