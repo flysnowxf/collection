@@ -3,13 +3,19 @@
  */
 package cn.flysnowxf.collection.dto;
 
+import java.io.Serializable;
+
 /**
  * 
  * <br>Create on 2016-4-24 下午8:11:41
  *
  * @author fengxuefeng
  */
-public class BlockGroupDto {
+public class BlockGroupDto implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String value;
 	

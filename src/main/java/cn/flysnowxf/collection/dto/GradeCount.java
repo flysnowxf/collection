@@ -3,13 +3,19 @@
  */
 package cn.flysnowxf.collection.dto;
 
+import java.io.Serializable;
+
 /**
  * 
  * <br>Create on 2016-4-10 下午11:26:40
  *
  * @author fengxuefeng
  */
-public class GradeCount {
+public class GradeCount implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String grade;
 	private Integer count;
 	private Integer price;

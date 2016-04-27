@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.flysnowxf.collection.constant.CacheConstants;
 import cn.flysnowxf.collection.dto.GradeCount;
 import cn.flysnowxf.collection.dto.PmgData;
 import cn.flysnowxf.collection.dto.PmgGradeRequest;
@@ -27,6 +28,7 @@ import cn.flysnowxf.collection.entity.PmgLog;
 import cn.flysnowxf.collection.utils.PmgUtils;
 
 import com.google.gson.Gson;
+import com.whalin.MemCached.MemCachedClient;
 
 /**
  * 
@@ -46,6 +48,8 @@ public class LookupPmgService {
 	private DataService dataService;
 	@Autowired
 	private NoteService noteService;
+	@Autowired
+	protected MemCachedClient memcachedClient;
 	
 	private static final Logger logger = Logger.getLogger(LookupPmgService.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -159,6 +163,10 @@ public class LookupPmgService {
 		// 更新时间
 		if (!isException) {
 			dataService.updateByKeyword("updateDate", date);
+			
+			// 更新缓存
+			memcachedClient.delete(CacheConstants.INDEX_PMGLISTMAP_KEY);
+			memcachedClient.delete(CacheConstants.INDEX_TITLE_KEY);
 		}
 		
 		logger.info("LookupPmg End!");

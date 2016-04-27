@@ -3,6 +3,7 @@
  */
 package cn.flysnowxf.collection.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,7 +12,11 @@ import java.util.List;
  *
  * @author fengxuefeng
  */
-public class BlockDto {
+public class BlockDto implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private List<BlockGroupDto> blockGroupList;
 	private String summary;

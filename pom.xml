@@ -171,6 +171,16 @@
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.2</version>
 		</dependency>
+		<dependency>
+			<groupId>com.whalin</groupId>
+			<artifactId>Memcached-Java-Client</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.6</version>
+		</dependency>
 	</dependencies>
 	
 	<profiles>
@@ -183,6 +193,7 @@
 				<db_jdbcUrl>jdbc:mysql://192.168.0.150:3306/collection?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;autoReconnect=true&amp;rewriteBatchedStatements=TRUE</db_jdbcUrl>
 				<db_user>root</db_user>
 				<db_password>xinjinjie</db_password>
+				<MEMCACHED_URL>192.168.0.150:11211</MEMCACHED_URL>
 			</properties>
 		</profile>
 		<profile>
@@ -191,6 +202,7 @@
 				<db_jdbcUrl>jdbc:mysql://104.129.5.169:3306/collection?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;autoReconnect=true&amp;rewriteBatchedStatements=TRUE</db_jdbcUrl>
 				<db_user>root</db_user>
 				<db_password>flysnowxf</db_password>
+				<MEMCACHED_URL>104.129.5.169:11211</MEMCACHED_URL>
 			</properties>
 		</profile>
 		<profile>
@@ -199,6 +211,7 @@
 				<db_jdbcUrl>jdbc:mysql://localhost:3306/collection?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;autoReconnect=true&amp;rewriteBatchedStatements=TRUE</db_jdbcUrl>
 				<db_user>root</db_user>
 				<db_password>flysnowxf</db_password>
+				<MEMCACHED_URL>localhost:11211</MEMCACHED_URL>
 			</properties>
 		</profile>
 	</profiles>

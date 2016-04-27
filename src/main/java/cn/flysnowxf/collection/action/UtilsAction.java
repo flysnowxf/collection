@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.flysnowxf.collection.constant.CacheConstants;
 import cn.flysnowxf.collection.dto.UtilsRequest;
 import cn.flysnowxf.collection.entity.Block;
 import cn.flysnowxf.collection.entity.Pmg;
@@ -70,5 +71,13 @@ public class UtilsAction extends BaseAction {
 		}
 		
 		writerPrint(response, result);
+	}
+	
+	@RequestMapping("/clearCache")
+	public String clearCache() {
+		memcachedClient.delete(CacheConstants.INDEX_PMGLISTMAP_KEY);
+		memcachedClient.delete(CacheConstants.INDEX_TITLE_KEY);
+		
+		return "clearCache";
 	}
 }

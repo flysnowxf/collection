@@ -5,6 +5,7 @@ package cn.flysnowxf.collection.action;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.flysnowxf.collection.constant.CacheConstants;
 import cn.flysnowxf.collection.dto.BlockDto;
 import cn.flysnowxf.collection.dto.BlockGroupDto;
 import cn.flysnowxf.collection.dto.BlockRequest;
@@ -68,75 +70,89 @@ public class IndexAction extends BaseAction {
 	
 	@RequestMapping("/")
 	public String index(Model model) {
-		BeanUtilsBean.getInstance().getConvertUtils().register(false, false, 0);
 		LinkedHashMap<String, List<Pmg>> pmgListMap = new LinkedHashMap<String, List<Pmg>>();
 		
-		NoteRequest noteRequest = new NoteRequest();
-		noteRequest.setPageSize(Integer.MAX_VALUE);
-		List<Note> noteList = noteService.queryList(noteRequest);
-		
-		List<Integer> noteIds2 = new ArrayList<Integer>();
-		List<Integer> noteIds3 = new ArrayList<Integer>();
-		List<Integer> noteIds4 = new ArrayList<Integer>();
-		List<Integer> noteIdsJn = new ArrayList<Integer>();
-		List<Integer> noteIdsMaoJn = new ArrayList<Integer>();
-		List<Integer> noteIdsHkJn = new ArrayList<Integer>();
-		for (Note note : noteList) {
-			if (note.getVersion().equals("第二版")) {
-				noteIds2.add(note.getId());
-			}
-			else if (note.getVersion().equals("第三版")) {
-				noteIds3.add(note.getId());
-			}
-			else if (note.getVersion().equals("第四版")) {
-				noteIds4.add(note.getId());
-			}
-			else if (note.getVersion().equals("纪念钞")) {
-				noteIdsJn.add(note.getId());
-			}
-			else if (note.getVersion().equals("澳门纪念钞")) {
-				noteIdsMaoJn.add(note.getId());
-			}
-			else if (note.getVersion().equals("香港纪念钞")) {
-				noteIdsHkJn.add(note.getId());
-			}
+		// 判断缓存
+		Object pmgCache = memcachedClient.get(CacheConstants.INDEX_PMGLISTMAP_KEY);
+		Object titleCache = memcachedClient.get(CacheConstants.INDEX_TITLE_KEY);
+		if (pmgCache != null && titleCache != null) {
+			pmgListMap = (LinkedHashMap<String, List<Pmg>>) pmgCache;
+			DISPLAY_TITLE_LIST = (List<String>) titleCache;
 		}
-		
-		PmgRequest pmgRequest = new PmgRequest();
-		pmgRequest.setPageSize(Integer.MAX_VALUE);
-		List<QueryOrder> queryOrderList = new ArrayList<QueryOrder>();
-		queryOrderList.add(new QueryOrder("id", QueryOrderType.ASC));
-		pmgRequest.setQueryOrderList(queryOrderList);
-		
-		pmgRequest.setNoteIds(noteIds3);
-		List<Pmg> pmgList3 = pmgService.queryList(pmgRequest);
-		packageData(pmgList3);
-		pmgListMap.put("第三版", pmgList3);
-		
-		pmgRequest.setNoteIds(noteIds2);
-		List<Pmg> pmgList2 = pmgService.queryList(pmgRequest);
-		packageData(pmgList2);
-		pmgListMap.put("第二版", pmgList2);
-		
-		pmgRequest.setNoteIds(noteIds4);
-		List<Pmg> pmgList4 = pmgService.queryList(pmgRequest);
-		packageData(pmgList4);
-		pmgListMap.put("第四版", pmgList4);
-		
-		pmgRequest.setNoteIds(noteIdsJn);
-		List<Pmg> pmgListJn = pmgService.queryList(pmgRequest);
-		packageData(pmgListJn);
-		pmgListMap.put("纪念钞", pmgListJn);
-		
-		pmgRequest.setNoteIds(noteIdsMaoJn);
-		List<Pmg> pmgListMaoJn = pmgService.queryList(pmgRequest);
-		packageData(pmgListMaoJn, "澳门");
-		pmgListMap.put("澳门纪念钞", pmgListMaoJn);
-		
-		pmgRequest.setNoteIds(noteIdsHkJn);
-		List<Pmg> pmgListHkJn = pmgService.queryList(pmgRequest);
-		packageData(pmgListHkJn, "香港");
-		pmgListMap.put("香港纪念钞", pmgListHkJn);
+		else {
+			BeanUtilsBean.getInstance().getConvertUtils().register(false, false, 0);
+			
+			NoteRequest noteRequest = new NoteRequest();
+			noteRequest.setPageSize(Integer.MAX_VALUE);
+			List<Note> noteList = noteService.queryList(noteRequest);
+			
+			List<Integer> noteIds2 = new ArrayList<Integer>();
+			List<Integer> noteIds3 = new ArrayList<Integer>();
+			List<Integer> noteIds4 = new ArrayList<Integer>();
+			List<Integer> noteIdsJn = new ArrayList<Integer>();
+			List<Integer> noteIdsMaoJn = new ArrayList<Integer>();
+			List<Integer> noteIdsHkJn = new ArrayList<Integer>();
+			for (Note note : noteList) {
+				if (note.getVersion().equals("第二版")) {
+					noteIds2.add(note.getId());
+				}
+				else if (note.getVersion().equals("第三版")) {
+					noteIds3.add(note.getId());
+				}
+				else if (note.getVersion().equals("第四版")) {
+					noteIds4.add(note.getId());
+				}
+				else if (note.getVersion().equals("纪念钞")) {
+					noteIdsJn.add(note.getId());
+				}
+				else if (note.getVersion().equals("澳门纪念钞")) {
+					noteIdsMaoJn.add(note.getId());
+				}
+				else if (note.getVersion().equals("香港纪念钞")) {
+					noteIdsHkJn.add(note.getId());
+				}
+			}
+			
+			PmgRequest pmgRequest = new PmgRequest();
+			pmgRequest.setPageSize(Integer.MAX_VALUE);
+			List<QueryOrder> queryOrderList = new ArrayList<QueryOrder>();
+			queryOrderList.add(new QueryOrder("id", QueryOrderType.ASC));
+			pmgRequest.setQueryOrderList(queryOrderList);
+			
+			pmgRequest.setNoteIds(noteIds3);
+			List<Pmg> pmgList3 = pmgService.queryList(pmgRequest);
+			packageData(pmgList3);
+			pmgListMap.put("第三版", pmgList3);
+			
+			pmgRequest.setNoteIds(noteIds2);
+			List<Pmg> pmgList2 = pmgService.queryList(pmgRequest);
+			packageData(pmgList2);
+			pmgListMap.put("第二版", pmgList2);
+			
+			pmgRequest.setNoteIds(noteIds4);
+			List<Pmg> pmgList4 = pmgService.queryList(pmgRequest);
+			packageData(pmgList4);
+			pmgListMap.put("第四版", pmgList4);
+			
+			pmgRequest.setNoteIds(noteIdsJn);
+			List<Pmg> pmgListJn = pmgService.queryList(pmgRequest);
+			packageData(pmgListJn);
+			pmgListMap.put("纪念钞", pmgListJn);
+			
+			pmgRequest.setNoteIds(noteIdsMaoJn);
+			List<Pmg> pmgListMaoJn = pmgService.queryList(pmgRequest);
+			packageData(pmgListMaoJn, "澳门");
+			pmgListMap.put("澳门纪念钞", pmgListMaoJn);
+			
+			pmgRequest.setNoteIds(noteIdsHkJn);
+			List<Pmg> pmgListHkJn = pmgService.queryList(pmgRequest);
+			packageData(pmgListHkJn, "香港");
+			pmgListMap.put("香港纪念钞", pmgListHkJn);
+			
+			// 缓存
+			memcachedClient.add(CacheConstants.INDEX_PMGLISTMAP_KEY, pmgListMap, DateUtils.addHours(new Date(), 6));
+			memcachedClient.add(CacheConstants.INDEX_TITLE_KEY, DISPLAY_TITLE_LIST, DateUtils.addHours(new Date(), 6));
+		}
 		
 		// 更新时间
 		String updateDate = dataService.getByKeyword("updateDate").getValue();
@@ -260,6 +276,8 @@ public class IndexAction extends BaseAction {
 				int highScoreRatio = 0;
 				// 评分
 				LinkedHashMap<String, Integer> gradeCountMap = new LinkedHashMap<String, Integer>();
+				// 价格
+				Map<String, Integer> gradePriceMap = new HashMap<String, Integer>();
 				for (Pmg pmg : entry.getValue()) {
 					List<GradeCount> gradeCountList = pmg.getGradeCountList();
 					for (GradeCount gradeCount : gradeCountList) {
@@ -268,6 +286,10 @@ public class IndexAction extends BaseAction {
 							gradeCountMap.put(grade, 0);
 						}
 						gradeCountMap.put(grade, gradeCountMap.get(grade) + gradeCount.getCount());
+						
+						if (gradeCount.getPrice() != null && gradeCount.getPrice() > 0) {
+							gradePriceMap.put(grade, gradeCount.getPrice());
+						}
 					}
 					
 					// 总数累加
@@ -278,7 +300,9 @@ public class IndexAction extends BaseAction {
 				
 				List<GradeCount> countList = new ArrayList<GradeCount>();
 				for (Map.Entry<String, Integer> countEntry : gradeCountMap.entrySet()) {
-					countList.add(new GradeCount(countEntry.getKey(), countEntry.getValue()));
+					countList.add(new GradeCount(countEntry.getKey(), 
+							countEntry.getValue(), 
+							gradePriceMap.get(countEntry.getKey())));
 				}
 				
 				String catalogText = "";

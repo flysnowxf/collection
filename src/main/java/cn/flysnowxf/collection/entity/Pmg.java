@@ -3,6 +3,7 @@
  */
 package cn.flysnowxf.collection.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,11 @@ import cn.flysnowxf.collection.dto.KeyValueDto;
  *
  * @author fengxuefeng
  */
-public class Pmg {
+public class Pmg implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Integer noteId;
 	private String name;

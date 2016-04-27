@@ -3,13 +3,19 @@
  */
 package cn.flysnowxf.collection.dto;
 
+import java.io.Serializable;
+
 /**
  * 
  * <br>Create on 2016-4-16 上午11:23:25
  *
  * @author fengxuefeng
  */
-public class KeyValueDto {
+public class KeyValueDto implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String key;
 	private String value;
 	
