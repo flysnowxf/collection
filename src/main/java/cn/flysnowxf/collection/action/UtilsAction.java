@@ -77,6 +77,8 @@ public class UtilsAction extends BaseAction {
 	public String clearCache() {
 		memcachedClient.delete(CacheConstants.INDEX_PMGLISTMAP_KEY);
 		memcachedClient.delete(CacheConstants.INDEX_TITLE_KEY);
+		memcachedClient.delete(CacheConstants.YIBAN_PMGLISTMAP_KEY);
+		memcachedClient.delete(CacheConstants.YIBAN_TITLE_KEY);
 		
 		return "clearCache";
 	}

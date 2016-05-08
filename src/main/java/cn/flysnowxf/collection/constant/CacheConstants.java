@@ -12,4 +12,7 @@ package cn.flysnowxf.collection.constant;
 public class CacheConstants {
 	public static final String INDEX_PMGLISTMAP_KEY = "index_pmglistmap";
 	public static final String INDEX_TITLE_KEY = "index_title";
+	
+	public static final String YIBAN_PMGLISTMAP_KEY = "yiban_pmglistmap";
+	public static final String YIBAN_TITLE_KEY = "yiban_title";
 }

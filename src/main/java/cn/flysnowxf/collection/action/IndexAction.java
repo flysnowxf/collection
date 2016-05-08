@@ -68,6 +68,106 @@ public class IndexAction extends BaseAction {
 	private static final int DISPLAY_NUM = 64;
 	private List<String> DISPLAY_TITLE_LIST = new ArrayList<String>();
 	
+	@RequestMapping("/yiban")
+	public String yiban(Model model) {
+		LinkedHashMap<String, List<Pmg>> pmgListMap = new LinkedHashMap<String, List<Pmg>>();
+		
+		// 判断缓存
+		Object pmgCache = memcachedClient.get(CacheConstants.YIBAN_PMGLISTMAP_KEY);
+		Object titleCache = memcachedClient.get(CacheConstants.YIBAN_TITLE_KEY);
+		if (pmgCache != null && titleCache != null) {
+			pmgListMap = (LinkedHashMap<String, List<Pmg>>) pmgCache;
+			DISPLAY_TITLE_LIST = (List<String>) titleCache;
+		}
+		else {
+			BeanUtilsBean.getInstance().getConvertUtils().register(false, false, 0);
+			
+			NoteRequest noteRequest = new NoteRequest();
+			noteRequest.setPageSize(Integer.MAX_VALUE);
+			List<Note> noteList = noteService.queryList(noteRequest);
+			
+			List<Integer> noteIds1 = new ArrayList<Integer>();
+			List<Integer> noteIds20 = new ArrayList<Integer>();
+			List<Integer> noteIds100 = new ArrayList<Integer>();
+			List<Integer> noteIds200 = new ArrayList<Integer>();
+			List<Integer> noteIds1000 = new ArrayList<Integer>();
+			List<Integer> noteIds10000 = new ArrayList<Integer>();
+			for (Note note : noteList) {
+				if (note.getVersion().equals("第一版")) {
+					int value = Integer.valueOf(note.getValue().replace("元", ""));
+					if (value < 20) {
+						noteIds1.add(note.getId());
+					}
+					else if (value < 100) {
+						noteIds20.add(note.getId());
+					}
+					else if (value < 200) {
+						noteIds100.add(note.getId());
+					}
+					else if (value < 1000) {
+						noteIds200.add(note.getId());
+					}
+					else if (value < 10000) {
+						noteIds1000.add(note.getId());
+					}
+					else {
+						noteIds10000.add(note.getId());
+					}
+				}
+			}
+			
+			PmgRequest pmgRequest = new PmgRequest();
+			pmgRequest.setPageSize(Integer.MAX_VALUE);
+			List<QueryOrder> queryOrderList = new ArrayList<QueryOrder>();
+			queryOrderList.add(new QueryOrder("id", QueryOrderType.ASC));
+			pmgRequest.setQueryOrderList(queryOrderList);
+			
+			pmgRequest.setNoteIds(noteIds1);
+			List<Pmg> pmgList1 = pmgService.queryList(pmgRequest);
+			packageData(pmgList1, "1-10元");
+			pmgListMap.put("1-10元", pmgList1);
+			
+			pmgRequest.setNoteIds(noteIds20);
+			List<Pmg> pmgList20 = pmgService.queryList(pmgRequest);
+			packageData(pmgList20, "20-50元");
+			pmgListMap.put("20-50元", pmgList20);
+			
+			pmgRequest.setNoteIds(noteIds100);
+			List<Pmg> pmgList100 = pmgService.queryList(pmgRequest);
+			packageData(pmgList100, "100元");
+			pmgListMap.put("100元", pmgList100);
+			
+			pmgRequest.setNoteIds(noteIds200);
+			List<Pmg> pmgList200 = pmgService.queryList(pmgRequest);
+			packageData(pmgList200, "200-500元");
+			pmgListMap.put("200-500元", pmgList200);
+			
+			pmgRequest.setNoteIds(noteIds1000);
+			List<Pmg> pmgList1000 = pmgService.queryList(pmgRequest);
+			packageData(pmgList1000, "1千-5千元");
+			pmgListMap.put("1千-5千元", pmgList1000);
+			
+			pmgRequest.setNoteIds(noteIds10000);
+			List<Pmg> pmgList10000 = pmgService.queryList(pmgRequest);
+			packageData(pmgList10000, "1万-5万元");
+			pmgListMap.put("1万-5万元", pmgList10000);
+			
+			// 缓存
+			memcachedClient.add(CacheConstants.YIBAN_PMGLISTMAP_KEY, pmgListMap, DateUtils.addHours(new Date(), 6));
+			memcachedClient.add(CacheConstants.YIBAN_TITLE_KEY, DISPLAY_TITLE_LIST, DateUtils.addHours(new Date(), 6));
+		}
+		
+		// 更新时间
+		String updateDate = dataService.getByKeyword("updateDate").getValue();
+		
+		// return
+		model.addAttribute("pmgListMap", pmgListMap);
+		model.addAttribute("titleList", DISPLAY_TITLE_LIST);
+		model.addAttribute("updateDate", updateDate);
+		
+		return "yiban";
+	}
+	
 	@RequestMapping("/")
 	public String index(Model model) {
 		LinkedHashMap<String, List<Pmg>> pmgListMap = new LinkedHashMap<String, List<Pmg>>();
@@ -165,14 +265,16 @@ public class IndexAction extends BaseAction {
 		return "index";
     }
 	
-	private void packageKeyValue(Pmg pmg) {
+	private void packageKeyValue(Pmg pmg, Note note) {
 		List<KeyValueDto> kvList = new ArrayList<KeyValueDto>();
 		
-		// 高分难度
-		String highTitle = "高分难度";
-		kvList.add(new KeyValueDto(highTitle, String.valueOf(getRatioStar(pmg.getHighScoreRatio()))));
-		if (!DISPLAY_TITLE_LIST.contains(highTitle)) {
-			DISPLAY_TITLE_LIST.add(highTitle);
+		if (!note.getVersion().equals("第一版")) {
+			// 高分难度
+			String highTitle = "高分难度";
+			kvList.add(new KeyValueDto(highTitle, String.valueOf(getRatioStar(pmg.getHighScoreRatio()))));
+			if (!DISPLAY_TITLE_LIST.contains(highTitle)) {
+				DISPLAY_TITLE_LIST.add(highTitle);
+			}
 		}
 		
 		// 新增
@@ -207,6 +309,7 @@ public class IndexAction extends BaseAction {
 	private void packageData(List<Pmg> pmgList, String country) {
 		for (Pmg pmg : pmgList) {
 			Integer pmgId = pmg.getId();
+			Note note = noteService.get(pmg.getNoteId());
 			
 			PmgGradeRequest request = new PmgGradeRequest();
 			request.setPmgId(pmgId);
@@ -219,7 +322,7 @@ public class IndexAction extends BaseAction {
 			int highCount = 0;
 			List<GradeCount> countList = new ArrayList<GradeCount>();
 			for (PmgGrade pmgGrade : gradeList) {
-				if (isDisplay(pmgGrade)) {
+				if (isDisplay(pmgGrade, note)) {
 					// 使用简写E
 					String grade = pmgGrade.getGrade().replaceAll(" EPQ", "E");
 					countList.add(new GradeCount(grade, pmgGrade.getCount(),
@@ -241,7 +344,10 @@ public class IndexAction extends BaseAction {
 			packageBlock(pmg);
 			
 			// kv
-			packageKeyValue(pmg);
+			packageKeyValue(pmg, note);
+			
+			// 面值
+			pmg.setValue(note.getValue());
 		}
 		
 		packagePmgList(pmgList, country);
@@ -253,7 +359,8 @@ public class IndexAction extends BaseAction {
 		if (StringUtils.isNotBlank(country)) {
 			LinkedHashMap<String, List<Pmg>> nameListMap = new LinkedHashMap<String, List<Pmg>>();
 			for (Pmg pmg : pmgList) {
-				String name = pmg.getName();
+				// 名称+年份来区分
+				String name = pmg.getName() + pmg.getYear();
 				if (!nameListMap.containsKey(name)) {
 					nameListMap.put(name, new ArrayList<Pmg>());
 				}
@@ -323,9 +430,12 @@ public class IndexAction extends BaseAction {
 		}
 	}
 	
-	private boolean isDisplay(PmgGrade pmgGrade) {
+	private boolean isDisplay(PmgGrade pmgGrade, Note note) {
 		try {
-			if (getGradeNum(pmgGrade) >= DISPLAY_NUM) {
+			int gradeNum = getGradeNum(pmgGrade);
+			if ((!note.getVersion().equals("第一版") && gradeNum >= DISPLAY_NUM)
+					|| (note.getVersion().equals("第一版") && gradeNum >= 10 && gradeNum <= 68
+							&& gradeNum != 60 && gradeNum != 61)) {
 				// 使用简写E
 				String grade = pmgGrade.getGrade().replaceAll(" EPQ", "E");
 				if (!DISPLAY_TITLE_LIST.contains(grade)) {

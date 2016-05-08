@@ -167,6 +167,8 @@ public class LookupPmgService {
 			// 更新缓存
 			memcachedClient.delete(CacheConstants.INDEX_PMGLISTMAP_KEY);
 			memcachedClient.delete(CacheConstants.INDEX_TITLE_KEY);
+			memcachedClient.delete(CacheConstants.YIBAN_PMGLISTMAP_KEY);
+			memcachedClient.delete(CacheConstants.YIBAN_TITLE_KEY);
 		}
 		
 		logger.info("LookupPmg End!");

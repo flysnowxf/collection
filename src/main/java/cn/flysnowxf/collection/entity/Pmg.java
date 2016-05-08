@@ -39,6 +39,7 @@ public class Pmg implements Serializable {
 	private List<KeyValueDto> keyValueList;
 	private Integer highScoreRatio;
 	private List<BlockDto> blockList;
+	private String value;
 	
 	public Integer getId() {
 		return id;
@@ -135,5 +136,11 @@ public class Pmg implements Serializable {
 	}
 	public void setBlockList(List<BlockDto> blockList) {
 		this.blockList = blockList;
+	}
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
 	}
 }
