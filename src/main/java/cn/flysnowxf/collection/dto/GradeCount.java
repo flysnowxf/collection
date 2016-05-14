@@ -19,7 +19,16 @@ public class GradeCount implements Serializable {
 	private String grade;
 	private Integer count;
 	private Integer price;
+	private String historyPrice;
 	
+	public GradeCount(String grade, Integer count, Integer price,
+			String historyPrice) {
+		this.grade = grade;
+		this.count = count;
+		this.price = price;
+		this.historyPrice = historyPrice;
+	}
+
 	public GradeCount(String grade, Integer count, Integer price) {
 		this.grade = grade;
 		this.count = count;
@@ -50,6 +59,14 @@ public class GradeCount implements Serializable {
 
 	public void setPrice(Integer price) {
 		this.price = price;
+	}
+
+	public String getHistoryPrice() {
+		return historyPrice;
+	}
+
+	public void setHistoryPrice(String historyPrice) {
+		this.historyPrice = historyPrice;
 	}
 	
 }

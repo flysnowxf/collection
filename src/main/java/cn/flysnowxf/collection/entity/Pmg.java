@@ -40,6 +40,8 @@ public class Pmg implements Serializable {
 	private Integer highScoreRatio;
 	private List<BlockDto> blockList;
 	private String value;
+	private Integer lastMonthAdd;
+	private Integer thisMonthAdd;
 	
 	public Integer getId() {
 		return id;
@@ -142,5 +144,17 @@ public class Pmg implements Serializable {
 	}
 	public void setValue(String value) {
 		this.value = value;
+	}
+	public Integer getLastMonthAdd() {
+		return lastMonthAdd;
+	}
+	public void setLastMonthAdd(Integer lastMonthAdd) {
+		this.lastMonthAdd = lastMonthAdd;
+	}
+	public Integer getThisMonthAdd() {
+		return thisMonthAdd;
+	}
+	public void setThisMonthAdd(Integer thisMonthAdd) {
+		this.thisMonthAdd = thisMonthAdd;
 	}
 }

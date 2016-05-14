@@ -4,6 +4,7 @@
 package cn.flysnowxf.collection.action;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -29,6 +30,7 @@ import cn.flysnowxf.collection.dto.GradeCount;
 import cn.flysnowxf.collection.dto.KeyValueDto;
 import cn.flysnowxf.collection.dto.NoteRequest;
 import cn.flysnowxf.collection.dto.PmgGradeRequest;
+import cn.flysnowxf.collection.dto.PmgLogRequest;
 import cn.flysnowxf.collection.dto.PmgRequest;
 import cn.flysnowxf.collection.dto.QueryOrder;
 import cn.flysnowxf.collection.dto.QueryOrderType;
@@ -36,6 +38,7 @@ import cn.flysnowxf.collection.entity.Block;
 import cn.flysnowxf.collection.entity.Note;
 import cn.flysnowxf.collection.entity.Pmg;
 import cn.flysnowxf.collection.entity.PmgGrade;
+import cn.flysnowxf.collection.entity.PmgLog;
 import cn.flysnowxf.collection.service.BlockService;
 import cn.flysnowxf.collection.service.DataService;
 import cn.flysnowxf.collection.service.NoteService;
@@ -275,31 +278,29 @@ public class IndexAction extends BaseAction {
 			if (!DISPLAY_TITLE_LIST.contains(highTitle)) {
 				DISPLAY_TITLE_LIST.add(highTitle);
 			}
+			
+			// 新增
+			String monthTitle = "本月新增";
+			kvList.add(new KeyValueDto(monthTitle, String.valueOf(pmg.getThisMonthAdd())));
+			if (!DISPLAY_TITLE_LIST.contains(monthTitle)) {
+				DISPLAY_TITLE_LIST.add(monthTitle);
+			}
+			
+//			String monthTitle = "上月新增";
+//			kvList.add(new KeyValueDto(monthTitle, String.valueOf(pmg.getLastMonthAdd())));
+//			if (!DISPLAY_TITLE_LIST.contains(monthTitle)) {
+//				DISPLAY_TITLE_LIST.add(monthTitle);
+//			}
 		}
 		
-		// 新增
-		// 本月新增
-//		String monthTitle = "本月新增";
-//		int monthNew = 0;
-//		Date now = new Date();
-//		String nowMonth = monthSdf.format(now);
-//		PmgLogRequest pmgLogRequest = new PmgLogRequest();
-//		pmgLogRequest.setMonth(nowMonth);
-//		pmgLogRequest.setPmgId(pmg.getId());
-//		pmgLogRequest.setPageSize(Integer.MAX_VALUE);
-//		List<PmgLog> logList = pmgLogService.queryList(pmgLogRequest);
-//		// 取头尾相减
-//		if (CollectionUtils.isNotEmpty(logList) && logList.size() > 1) {
-//			PmgLog start = logList.get(0);
-//			PmgLog end = logList.get(logList.size() - 1);
-//			monthNew = end.getTotal() - start.getTotal();
-//		}
-//		kvList.add(new KeyValueDto(monthTitle, String.valueOf(monthNew)));
-//		if (!DISPLAY_TITLE_LIST.contains(monthTitle)) {
-//			DISPLAY_TITLE_LIST.add(monthTitle);
-//		}
-		
 		pmg.setKeyValueList(kvList);
+	}
+	
+	private String getMonth(int amount) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.MONTH, amount);
+		
+		return monthSdf.format(calendar.getTime());
 	}
 	
 	private void packageData(List<Pmg> pmgList) {
@@ -325,8 +326,12 @@ public class IndexAction extends BaseAction {
 				if (isDisplay(pmgGrade, note)) {
 					// 使用简写E
 					String grade = pmgGrade.getGrade().replaceAll(" EPQ", "E");
+					String historyPrice = pmgGrade.getHistoryPrice();
+					if (StringUtils.isNotBlank(historyPrice)) {
+						historyPrice = historyPrice.replaceAll("\\s", "");
+					}
 					countList.add(new GradeCount(grade, pmgGrade.getCount(),
-							pmgGrade.getPrice().intValue()));
+							pmgGrade.getPrice().intValue(), historyPrice));
 				}
 				
 				// 67以上为高分
@@ -340,17 +345,48 @@ public class IndexAction extends BaseAction {
 			int ratio = (int)(highCount * 100.0f / pmg.getTotal());
 			pmg.setHighScoreRatio(ratio);
 			
+			// 新增
+			packageMonthAdd(pmg);
+			
 			// 冠号
 			packageBlock(pmg);
-			
-			// kv
-			packageKeyValue(pmg, note);
 			
 			// 面值
 			pmg.setValue(note.getValue());
 		}
 		
+		// 封装多个编号的问题
 		packagePmgList(pmgList, country);
+		
+		for (Pmg pmg : pmgList) {
+			Note note = noteService.get(pmg.getNoteId());
+			// kv
+			packageKeyValue(pmg, note);
+		}
+	}
+	
+	private void packageMonthAdd(Pmg pmg) {
+		// 新增
+		// 本月新增
+		pmg.setThisMonthAdd(getMonthAdd(pmg, getMonth(0)));
+		// 上月新增
+		pmg.setLastMonthAdd(getMonthAdd(pmg, getMonth(-1)));
+	}
+	
+	private Integer getMonthAdd(Pmg pmg, String month) {
+		PmgLogRequest pmgLogRequest = new PmgLogRequest();
+		pmgLogRequest.setMonth(month);
+		pmgLogRequest.setPmgId(pmg.getId());
+		pmgLogRequest.setPageSize(Integer.MAX_VALUE);
+		List<PmgLog> logList = pmgLogService.queryList(pmgLogRequest);
+		// 取头尾相减
+		if (CollectionUtils.isNotEmpty(logList) && logList.size() > 1) {
+			PmgLog start = logList.get(0);
+			PmgLog end = logList.get(logList.size() - 1);
+			return end.getTotal() - start.getTotal();
+		}
+		
+		return 0;
 	}
 	
 	private void packagePmgList(List<Pmg> pmgList, String country) {
@@ -381,6 +417,9 @@ public class IndexAction extends BaseAction {
 				int total = 0;
 				// 高分比例
 				int highScoreRatio = 0;
+				// 新增
+				int thisMonthAdd = 0;
+				int lastMonthAdd = 0;
 				// 评分
 				LinkedHashMap<String, Integer> gradeCountMap = new LinkedHashMap<String, Integer>();
 				// 价格
@@ -403,6 +442,9 @@ public class IndexAction extends BaseAction {
 					total += pmg.getTotal();
 					// 高分比例累加
 					highScoreRatio += pmg.getHighScoreRatio();
+					// 新增累加
+					thisMonthAdd += pmg.getThisMonthAdd();
+					lastMonthAdd += pmg.getLastMonthAdd();
 				}
 				
 				List<GradeCount> countList = new ArrayList<GradeCount>();
@@ -419,6 +461,8 @@ public class IndexAction extends BaseAction {
 				newPmg.setCatalog(newPmg.getCatalog() + catalogText);
 				newPmg.setTotal(total);
 				newPmg.setHighScoreRatio(highScoreRatio / count);
+				newPmg.setThisMonthAdd(thisMonthAdd);
+				newPmg.setLastMonthAdd(lastMonthAdd);
 				newPmg.setGradeCountList(countList);
 				result.add(newPmg);
 			}

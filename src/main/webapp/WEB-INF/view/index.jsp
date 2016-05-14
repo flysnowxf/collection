@@ -3,7 +3,7 @@
 <head>
 <title>PMG评级币数量查询-枣红、背绿、车工和碳黑等各版评级分数统计</title>
 <meta name="keywords" content="PMG,评级,评级币,评级钞,人民币,纸币,纪念钞,行情,冠号,豹子号,尾8,枣红,背绿,车工,绿3,大黑拾,数量查询" />
-<meta name="description" content="网站提供对新中国第一套、第二套人民币、第三套人民币、第四套人民币和纪念钞的PMG各评级分数的数量查询、统计报告和行情报价，以及对冠号的区分归类和真伪鉴别。PMG评级纸币数量查询，就在PMG666.com。" />
+<meta name="description" content="网站提供对新中国第一套人民币、第二套人民币、第三套人民币、第四套人民币和纪念钞的PMG各评级分数的数量查询、统计报告和行情报价，以及对冠号的区分归类和真伪鉴别。PMG评级纸币数量查询，就在PMG666.com。" />
 <%@ include file="/common/header.jsp" %>
 <style>
 .body {margin-top: 30px }
@@ -131,7 +131,76 @@
 			<c:forEach var="gradeCount" items="${pmg.gradeCountList }" varStatus="status">
 			<c:if test="${status.index == 3 || status.index == 4 }">
 			<td class="warning">${gradeCount.count }</td>
-			<td class="warning"><c:if test="${gradeCount.price > 0 }">${gradeCount.price } 元</c:if></td>
+			<td class="warning">
+				<c:if test="${gradeCount.price > 0 }">
+					<c:if test="${empty gradeCount.historyPrice }">
+						${gradeCount.price } 元
+					</c:if>
+					<c:if test="${!empty gradeCount.historyPrice }">
+						<a href="#" data-toggle="modal" data-target="#${pmg.id }_${gradeCount.grade }_Modal">${gradeCount.price } 元</a>
+						<!-- Modal -->
+						<div class="modal fade" id="${pmg.id }_${gradeCount.grade }_Modal" tabindex="-1" role="dialog" aria-labelledby="${pmg.id }_${gradeCount.grade }_ModalLabel">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<h3 class="modal-title">价格走势图</h3>
+									</div>
+									<div class="modal-body">
+										<div id="${pmg.id }_${gradeCount.grade }_container" style="width: 550px; height: 300px;"></div>
+										<script>
+										var title = "${pmg.name }${gradeCount.grade }参考价";
+										var series = [];
+										var category = [];
+										var data = [];
+										
+										var price = JSON.parse('${gradeCount.historyPrice }');
+										for (var k in price) {
+											category.push(k);
+											data.push(price[k]);
+										}
+										
+										var dataObj = {};
+										dataObj.name = title;
+										dataObj.data = data;
+										series.push(dataObj);
+										
+										$('#${pmg.id }_${gradeCount.grade }_container').highcharts({
+											title: {
+												text: title
+											},
+											subtitle: {
+												text: 'PMG666.com'
+											},
+											xAxis: {
+												categories: category
+											},
+											yAxis: {
+												title: {
+													text: '价格 (元)'
+												},
+												plotLines: [{
+													value: 0,
+													width: 1,
+													color: '#808080'
+												}]
+											},
+											tooltip: {
+												headerFormat: '',
+												pointFormatter: function() {
+													return this.y + ' 元';
+												}
+											},
+											series: series
+										});
+										</script>
+									</div>
+								</div>
+							</div>
+						</div>
+					</c:if>
+				</c:if>
+			</td>
 			</c:if>
 			<c:if test="${status.index != 3 && status.index != 4 && status.index != 7 }">
 			<td>${gradeCount.count }</td>

@@ -21,6 +21,7 @@ public class PmgGrade {
 	private String backImage;
 	private Date createDate;
 	private Date modifyDate;
+	private String historyPrice;
 	
 	public Integer getId() {
 		return id;
@@ -75,5 +76,11 @@ public class PmgGrade {
 	}
 	public void setModifyDate(Date modifyDate) {
 		this.modifyDate = modifyDate;
+	}
+	public String getHistoryPrice() {
+		return historyPrice;
+	}
+	public void setHistoryPrice(String historyPrice) {
+		this.historyPrice = historyPrice;
 	}
 }
