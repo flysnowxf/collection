@@ -18,6 +18,9 @@
         	<if test="catalog != null">
         		and catalog=#{catalog}
         	</if>
+        	<if test="status != null">
+        		and status=#{status}
+        	</if>
 		</where>
 	</sql>
 	

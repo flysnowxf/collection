@@ -149,7 +149,7 @@
 									<div class="modal-body">
 										<div id="${pmg.id }_${gradeCount.grade }_container" style="width: 550px; height: 300px;"></div>
 										<script>
-										var title = "${pmg.name }${gradeCount.grade }参考价";
+										var title = "${pmg.name } ${gradeCount.grade }参考价";
 										var series = [];
 										var category = [];
 										var data = [];

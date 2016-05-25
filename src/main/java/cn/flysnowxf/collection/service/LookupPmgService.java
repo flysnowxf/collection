@@ -53,6 +53,7 @@ public class LookupPmgService {
 	
 	private static final Logger logger = Logger.getLogger(LookupPmgService.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private static final int VALID_STATUS = 1;
 	
 	public void lookupPmg(String noteIds) {
 		logger.info("LookupPmg Start...");
@@ -68,6 +69,7 @@ public class LookupPmgService {
 		// 获取pmg数据
 		PmgRequest pmgRequest = new PmgRequest();
 		pmgRequest.setPageSize(Integer.MAX_VALUE);
+		pmgRequest.setStatus(VALID_STATUS);
 		if (CollectionUtils.isNotEmpty(noteIdList)) {
 			pmgRequest.setNoteIds(noteIdList);
 		}
@@ -154,9 +156,6 @@ public class LookupPmgService {
 //						Thread.sleep(1000);
 			} catch (Exception e) {
 				e.printStackTrace();
-				
-				isException = true;
-				break;
 			}
 		}
 		

@@ -20,6 +20,7 @@ public class PmgRequest extends Query {
 
 	private String catalog;
 	private Integer noteId;
+	private Integer status;
 	private List<Integer> noteIds;
 	
 	public String getCatalog() {
@@ -39,6 +40,12 @@ public class PmgRequest extends Query {
 	}
 	public void setNoteId(Integer noteId) {
 		this.noteId = noteId;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	
 }
