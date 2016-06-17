@@ -89,7 +89,40 @@
 		<tbody>
 		<c:forEach var="pmg" items="${pmgItem.value }">
 		<tr>
-			<th>${pmg.name }</th>
+			<th>${pmg.name }
+			<c:if test="${fn:length(pmg.dealPriceList) > 0 }">
+			<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#${pmg.id }Modal">?</button>
+			<!-- Modal -->
+			<div class="modal fade" id="${pmg.id }Modal" tabindex="-1" role="dialog" aria-labelledby="${pmg.id }ModalLabel">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h3 class="modal-title" id="${pmg.id }ModalLabel">${pmg.name }历史成交价</h3>
+						</div>
+						<div class="modal-body">
+							<table class="table table-striped">
+							<thead><th>日期</th><th>评级公司</th><th>分数</th><th>成交价</th><th>号码</th><th>来源</th><th>备注</th></thead>
+							<tbody>
+							<c:forEach var="dealPrice" items="${pmg.dealPriceList }">
+							<tr>
+								<td>${dealPrice.date }</td>
+								<td>${dealPrice.company }</td>
+								<td>${dealPrice.grade }</td>
+								<td>${dealPrice.price }</td>
+								<td>${dealPrice.number }</td>
+								<td>${dealPrice.source }</td>
+								<td>${dealPrice.remark }</td>
+							</tr>
+							</c:forEach>
+							</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			</c:if>
+			</th>
 			<td>${pmg.value }</td>
 			<td>${pmg.catalog }</td>
 			<td class="info">${pmg.total }</td>
@@ -122,7 +155,8 @@
 			<div class="bs-callout bs-callout-info" id="callout-type-dl-truncate">
 			<h3>感谢</h3>
 			<p>1.PMG评级币的数据取自于PMG官网 <code>www.pmgnotes.com</code></p>
-			<p>2.感谢现代钱币网 <code>www.coin001.com</code>对PMG编号的总结奉献</p>
+			<p>2.感谢现代钱币网 <code>www.coin001.com</code> 对PMG编号的总结奉献</p>
+			<p>3.感谢赵涌在线 <code>www.zhaoonline.com</code> 提供的成交价查询</p>
 			</div>
 		</div>
 	</div>

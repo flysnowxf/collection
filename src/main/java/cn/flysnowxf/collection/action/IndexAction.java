@@ -26,6 +26,7 @@ import cn.flysnowxf.collection.constant.CacheConstants;
 import cn.flysnowxf.collection.dto.BlockDto;
 import cn.flysnowxf.collection.dto.BlockGroupDto;
 import cn.flysnowxf.collection.dto.BlockRequest;
+import cn.flysnowxf.collection.dto.DealPrice;
 import cn.flysnowxf.collection.dto.GradeCount;
 import cn.flysnowxf.collection.dto.KeyValueDto;
 import cn.flysnowxf.collection.dto.NoteRequest;
@@ -45,6 +46,8 @@ import cn.flysnowxf.collection.service.NoteService;
 import cn.flysnowxf.collection.service.PmgGradeService;
 import cn.flysnowxf.collection.service.PmgLogService;
 import cn.flysnowxf.collection.service.PmgService;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * 
@@ -280,20 +283,29 @@ public class IndexAction extends BaseAction {
 			}
 			
 			// 新增
-			String monthTitle = "本月新增";
-			kvList.add(new KeyValueDto(monthTitle, String.valueOf(pmg.getThisMonthAdd())));
-			if (!DISPLAY_TITLE_LIST.contains(monthTitle)) {
-				DISPLAY_TITLE_LIST.add(monthTitle);
+			int day = getDayOfMonth();
+			if (day > 7) {
+				String monthTitle = "本月新增";
+				kvList.add(new KeyValueDto(monthTitle, String.valueOf(pmg.getThisMonthAdd())));
+				if (!DISPLAY_TITLE_LIST.contains(monthTitle)) {
+					DISPLAY_TITLE_LIST.add(monthTitle);
+				}
 			}
-			
-//			String monthTitle = "上月新增";
-//			kvList.add(new KeyValueDto(monthTitle, String.valueOf(pmg.getLastMonthAdd())));
-//			if (!DISPLAY_TITLE_LIST.contains(monthTitle)) {
-//				DISPLAY_TITLE_LIST.add(monthTitle);
-//			}
+			else {
+				String lastMonthTitle = "上月新增";
+				kvList.add(new KeyValueDto(lastMonthTitle, String.valueOf(pmg.getLastMonthAdd())));
+				if (!DISPLAY_TITLE_LIST.contains(lastMonthTitle)) {
+					DISPLAY_TITLE_LIST.add(lastMonthTitle);
+				}
+			}
 		}
 		
 		pmg.setKeyValueList(kvList);
+	}
+	
+	private int getDayOfMonth() {
+		Calendar calendar = Calendar.getInstance();
+		return calendar.get(Calendar.DATE);
 	}
 	
 	private String getMonth(int amount) {
@@ -353,6 +365,9 @@ public class IndexAction extends BaseAction {
 			
 			// 面值
 			pmg.setValue(note.getValue());
+			
+			// 成交价
+			packageDealPrice(pmg);
 		}
 		
 		// 封装多个编号的问题
@@ -362,6 +377,12 @@ public class IndexAction extends BaseAction {
 			Note note = noteService.get(pmg.getNoteId());
 			// kv
 			packageKeyValue(pmg, note);
+		}
+	}
+	
+	private void packageDealPrice(Pmg pmg) {
+		if (StringUtils.isNotBlank(pmg.getDealPrice())) {
+			pmg.setDealPriceList(JSON.parseArray(pmg.getDealPrice(), DealPrice.class));
 		}
 	}
 	

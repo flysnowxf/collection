@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import cn.flysnowxf.collection.dto.BlockDto;
+import cn.flysnowxf.collection.dto.DealPrice;
 import cn.flysnowxf.collection.dto.GradeCount;
 import cn.flysnowxf.collection.dto.KeyValueDto;
 
@@ -34,6 +35,7 @@ public class Pmg implements Serializable {
 	private String backImage;
 	private Date createDate;
 	private Date modifyDate;
+	private String dealPrice;
 	
 	private List<GradeCount> gradeCountList;
 	private List<KeyValueDto> keyValueList;
@@ -42,6 +44,7 @@ public class Pmg implements Serializable {
 	private String value;
 	private Integer lastMonthAdd;
 	private Integer thisMonthAdd;
+	private List<DealPrice> dealPriceList;
 	
 	public Integer getId() {
 		return id;
@@ -156,5 +159,17 @@ public class Pmg implements Serializable {
 	}
 	public void setThisMonthAdd(Integer thisMonthAdd) {
 		this.thisMonthAdd = thisMonthAdd;
+	}
+	public String getDealPrice() {
+		return dealPrice;
+	}
+	public void setDealPrice(String dealPrice) {
+		this.dealPrice = dealPrice;
+	}
+	public List<DealPrice> getDealPriceList() {
+		return dealPriceList;
+	}
+	public void setDealPriceList(List<DealPrice> dealPriceList) {
+		this.dealPriceList = dealPriceList;
 	}
 }

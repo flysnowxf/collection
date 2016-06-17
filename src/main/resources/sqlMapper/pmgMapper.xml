@@ -47,7 +47,7 @@
 		select * from pmg where id=#{id}
 	</select>
 	
-	<update id="update" parameterType="cn.flysnowxf.collection.entity.PmgLog">
+	<update id="update" parameterType="cn.flysnowxf.collection.entity.Pmg">
 		update pmg
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="total != null">total=#{total},</if>
