@@ -282,6 +282,13 @@ public class IndexAction extends BaseAction {
 				DISPLAY_TITLE_LIST.add(highTitle);
 			}
 			
+			// 高分比例
+			String highRatioTitle = "高分比例";
+			kvList.add(new KeyValueDto(highRatioTitle, String.valueOf(pmg.getHighScoreRatio()) + "%"));
+			if (!DISPLAY_TITLE_LIST.contains(highRatioTitle)) {
+				DISPLAY_TITLE_LIST.add(highRatioTitle);
+			}
+			
 			// 新增
 			int day = getDayOfMonth();
 			if (day > 7) {

@@ -13,8 +13,8 @@
 }
 .body .container {width: 95% }
 .footer {margin-top: 30px; margin-bottom: 30px }
-.name-th {width: 10% }
-.catalog-th {width: 8% }
+.name-th {width: 9% }
+.catalog-th {width: 7% }
 .pmg-th {width: 6% }
 .copyright {
     background: #111;
