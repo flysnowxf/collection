@@ -195,6 +195,7 @@ public class IndexAction extends BaseAction {
 			List<Integer> noteIds2 = new ArrayList<Integer>();
 			List<Integer> noteIds3 = new ArrayList<Integer>();
 			List<Integer> noteIds4 = new ArrayList<Integer>();
+			List<Integer> noteIds5 = new ArrayList<Integer>();
 			List<Integer> noteIdsJn = new ArrayList<Integer>();
 			List<Integer> noteIdsMaoJn = new ArrayList<Integer>();
 			List<Integer> noteIdsHkJn = new ArrayList<Integer>();
@@ -207,6 +208,9 @@ public class IndexAction extends BaseAction {
 				}
 				else if (note.getVersion().equals("第四版")) {
 					noteIds4.add(note.getId());
+				}
+				else if (note.getVersion().equals("第五版")) {
+					noteIds5.add(note.getId());
 				}
 				else if (note.getVersion().equals("纪念钞")) {
 					noteIdsJn.add(note.getId());
@@ -222,6 +226,7 @@ public class IndexAction extends BaseAction {
 			PmgRequest pmgRequest = new PmgRequest();
 			pmgRequest.setPageSize(Integer.MAX_VALUE);
 			List<QueryOrder> queryOrderList = new ArrayList<QueryOrder>();
+			queryOrderList.add(new QueryOrder("create_date", QueryOrderType.ASC));
 			queryOrderList.add(new QueryOrder("id", QueryOrderType.ASC));
 			pmgRequest.setQueryOrderList(queryOrderList);
 			
@@ -239,6 +244,11 @@ public class IndexAction extends BaseAction {
 			List<Pmg> pmgList4 = pmgService.queryList(pmgRequest);
 			packageData(pmgList4);
 			pmgListMap.put("第四版", pmgList4);
+			
+			pmgRequest.setNoteIds(noteIds5);
+			List<Pmg> pmgList5 = pmgService.queryList(pmgRequest);
+			packageData(pmgList5);
+			pmgListMap.put("第五版", pmgList5);
 			
 			pmgRequest.setNoteIds(noteIdsJn);
 			List<Pmg> pmgListJn = pmgService.queryList(pmgRequest);
@@ -291,7 +301,7 @@ public class IndexAction extends BaseAction {
 			
 			// 新增
 			int day = getDayOfMonth();
-			if (day > 7) {
+			if (day > 20) {
 				String monthTitle = "本月新增";
 				kvList.add(new KeyValueDto(monthTitle, String.valueOf(pmg.getThisMonthAdd())));
 				if (!DISPLAY_TITLE_LIST.contains(monthTitle)) {
